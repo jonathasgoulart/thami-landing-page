@@ -1,11 +1,69 @@
 // ===================================
+// Supabase Configuration
+// ===================================
+
+const SUPABASE_URL = 'https://sesftfsjfzknaioqajtq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlc2Z0ZnNqZnprbmFpb3FhanRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3ODY3OTQsImV4cCI6MjA4MjM2Mjc5NH0.pKpGYHxIU3MTHhPbsR8u2F9LV1V5xznwtS_rq9UXis0';
+
+let supabaseClient = null;
+
+// Initialize Supabase client
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('✅ Supabase initialized');
+        return true;
+    }
+    console.warn('⚠️ Supabase SDK not loaded');
+    return false;
+}
+
+// Load config from Supabase
+async function loadFromSupabase() {
+    if (!supabaseClient) {
+        return null;
+    }
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('site_config')
+            .select('config')
+            .eq('id', 1)
+            .single();
+
+        if (error) {
+            console.log('Could not load from Supabase:', error.message);
+            return null;
+        }
+
+        console.log('✅ Config loaded from Supabase');
+        return data?.config || null;
+    } catch (error) {
+        console.log('Error loading from Supabase:', error);
+        return null;
+    }
+}
+
+// ===================================
 // Configuration Loading
 // ===================================
 
 let config = null;
 
 async function loadConfig() {
-    // Try to load from localStorage first (admin edits)
+    // Initialize Supabase first
+    initSupabase();
+
+    // Try to load from Supabase first (cloud storage - highest priority)
+    const supabaseConfig = await loadFromSupabase();
+    if (supabaseConfig) {
+        config = supabaseConfig;
+        console.log('✅ Using config from Supabase (cloud)');
+        populatePage();
+        return;
+    }
+
+    // Fallback: Try to load from localStorage (admin edits)
     const savedConfig = localStorage.getItem('adminConfig');
 
     if (savedConfig) {

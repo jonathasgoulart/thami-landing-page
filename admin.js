@@ -2,6 +2,83 @@
 // Drag-and-Drop Editor for Landing Page
 
 // ===================================
+// Supabase Configuration
+// ===================================
+
+const SUPABASE_URL = 'https://sesftfsjfzknaioqajtq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlc2Z0ZnNqZnprbmFpb3FhanRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3ODY3OTQsImV4cCI6MjA4MjM2Mjc5NH0.pKpGYHxIU3MTHhPbsR8u2F9LV1V5xznwtS_rq9UXis0';
+
+let supabase = null;
+
+// Initialize Supabase client
+function initSupabase() {
+    if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('✅ Supabase initialized');
+        return true;
+    }
+    console.warn('⚠️ Supabase SDK not loaded');
+    return false;
+}
+
+// Save config to Supabase
+async function saveToSupabase(configData) {
+    if (!supabase) {
+        console.warn('Supabase not initialized, skipping cloud save');
+        return false;
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('site_config')
+            .upsert({ id: 1, config: configData, updated_at: new Date().toISOString() })
+            .select();
+
+        if (error) {
+            console.error('Error saving to Supabase:', error);
+            return false;
+        }
+
+        console.log('✅ Config saved to Supabase');
+        return true;
+    } catch (error) {
+        console.error('Error saving to Supabase:', error);
+        return false;
+    }
+}
+
+// Load config from Supabase
+async function loadFromSupabase() {
+    if (!supabase) {
+        console.warn('Supabase not initialized, skipping cloud load');
+        return null;
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('site_config')
+            .select('config')
+            .eq('id', 1)
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') {
+                console.log('No config found in Supabase (first time)');
+                return null;
+            }
+            console.error('Error loading from Supabase:', error);
+            return null;
+        }
+
+        console.log('✅ Config loaded from Supabase');
+        return data?.config || null;
+    } catch (error) {
+        console.error('Error loading from Supabase:', error);
+        return null;
+    }
+}
+
+// ===================================
 // State Management
 // ===================================
 
@@ -157,6 +234,9 @@ const platformTitles = {
 // ===================================
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Supabase first
+    initSupabase();
+
     loadExistingConfig();
     initializeEventListeners();
     initializeDeleteModal();
@@ -173,10 +253,23 @@ document.addEventListener('DOMContentLoaded', function () {
 // ===================================
 
 async function loadExistingConfig() {
+    let supabaseConfig = null;
     let localConfig = null;
     let fileConfig = null;
 
-    // Try to load from localStorage first (admin edits)
+    // Try to load from Supabase first (cloud storage - highest priority)
+    supabaseConfig = await loadFromSupabase();
+    if (supabaseConfig) {
+        console.log('✅ Using config from Supabase (cloud)');
+        config = supabaseConfig;
+        // Also save to localStorage for offline access
+        localStorage.setItem('adminConfig', JSON.stringify(config));
+        populateForm();
+        console.log('Loaded config:', config);
+        return;
+    }
+
+    // Try to load from localStorage (admin edits - local backup)
     const savedConfig = localStorage.getItem('adminConfig');
     if (savedConfig) {
         try {
@@ -273,6 +366,9 @@ function populateForm() {
 function saveToLocalStorage() {
     localStorage.setItem('adminConfig', JSON.stringify(config));
     console.log('Config saved to localStorage');
+
+    // Also save to Supabase (async, don't block UI)
+    saveToSupabase(config);
 }
 
 // ===================================
