@@ -1,0 +1,113 @@
+{
+  "profile": {
+    "name": "THAMI",
+    "subtitle": "Cantora • Compositora • Artista",
+    "image": "profile.png",
+    "bannerImage": "",
+    "bannerImageComment": "Adicione o nome do arquivo da foto horizontal aqui (ex: 'banner.jpg'). Deixe vazio para não mostrar banner"
+  },
+  "socialMedia": [
+    {
+      "platform": "instagram",
+      "title": "Instagram",
+      "description": "@oficialthami",
+      "url": "https://www.instagram.com/oficialthami",
+      "icon": "fab fa-instagram"
+    },
+    {
+      "platform": "tiktok",
+      "title": "TikTok",
+      "description": "@oficialthami",
+      "url": "https://www.tiktok.com/@oficialthami",
+      "icon": "fab fa-tiktok"
+    },
+    {
+      "platform": "twitter",
+      "title": "Twitter / X",
+      "description": "@oficialthamii",
+      "url": "https://twitter.com/oficialthamii",
+      "icon": "fab fa-twitter"
+    },
+    {
+      "platform": "facebook",
+      "title": "Facebook",
+      "description": "Curta a página oficial",
+      "url": "https://www.facebook.com/oficialthami",
+      "icon": "fab fa-facebook"
+    }
+  ],
+  "youtube": {
+    "channelUrl": "https://www.youtube.com/@oficialthami",
+    "channelTitle": "Canal do YouTube",
+    "channelDescription": "Inscreva-se para não perder nenhum vídeo!",
+    "videos": [
+      {
+        "title": "Show Completo - Labirinto",
+        "description": "Assista ao show completo",
+        "url": "https://www.youtube.com/watch?v=sWi1pWUtyG4",
+        "thumbnail": "https://i.ytimg.com/vi/sWi1pWUtyG4/hqdefault.jpg"
+      },
+      {
+        "title": "Talvez / Caminhando em ré",
+        "description": "Videoclipe oficial",
+        "url": "https://www.youtube.com/watch?v=spCDRRciRdY",
+        "thumbnail": "https://i.ytimg.com/vi/spCDRRciRdY/hqdefault.jpg"
+      },
+      {
+        "title": "Ver Mais Vídeos",
+        "description": "Acesse o canal completo",
+        "url": "https://www.youtube.com/@oficialthami",
+        "thumbnail": "https://via.placeholder.com/400x225/8B5CF6/FFFFFF?text=Mais+Videos"
+      }
+    ]
+  },
+  "musicPlatforms": [
+    {
+      "platform": "spotify",
+      "title": "Spotify",
+      "description": "Perfil do Artista",
+      "url": "https://open.spotify.com/intl-pt/artist/6fupiyOvfbI12eijANkwZL",
+      "icon": "fab fa-spotify"
+    },
+    {
+      "platform": "spotify",
+      "title": "Álbum Labirinto",
+      "description": "Ouça no Spotify",
+      "url": "https://open.spotify.com/intl-pt/album/1p9ksUAGTlV9BPI7fqs5j2",
+      "icon": "fab fa-spotify"
+    },
+    {
+      "platform": "deezer",
+      "title": "Deezer",
+      "description": "Perfil THAMI",
+      "url": "https://deezer.page.link/RmSPPqfGdJ82jbkK6",
+      "icon": "fab fa-deezer"
+    },
+    {
+      "platform": "deezer",
+      "title": "Álbum Labirinto",
+      "description": "Ouça no Deezer",
+      "url": "https://deezer.page.link/tbbaovRgoGATxTz49",
+      "icon": "fab fa-deezer"
+    }
+  ],
+  "canvaEmbed": {
+    "enabled": false,
+    "url": "",
+    "title": "Apresentação / Release",
+    "description": "Conheça mais sobre o projeto"
+  },
+  "footer": {
+    "copyright": "© 2024 Todos os direitos reservados",
+    "links": [
+      {
+        "text": "Política de Privacidade",
+        "url": "#"
+      },
+      {
+        "text": "Termos de Uso",
+        "url": "#"
+      }
+    ]
+  }
+}

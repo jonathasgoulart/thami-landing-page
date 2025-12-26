@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Landing Page THAMI</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin-notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <h1><i class="fas fa-cog"></i> Admin Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="importConfigBtn" title="Importar arquivo config.json">
+                    <i class="fas fa-file-import"></i> Importar
+                </button>
+                <button class="btn btn-secondary" id="resetConfigBtn" title="Restaurar dados padrão">
+                    <i class="fas fa-undo"></i> Resetar
+                </button>
+                <button class="btn btn-secondary" id="previewBtn">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i> Salvar Config
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="admin-container">
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <!-- Profile Section -->
+            <section class="editor-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user"></i> Perfil
+                </h2>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" id="profileName" placeholder="Nome do Artista">
+                </div>
+                <div class="form-group">
+                    <label>Subtítulo</label>
+                    <input type="text" id="profileSubtitle" placeholder="Cantor • Compositor • Artista">
+                </div>
+                <div class="form-group">
+                    <label>Foto de Perfil</label>
+                    <div class="image-upload" id="profileImageUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Arraste a imagem ou clique para selecionar</p>
+                        <input type="file" id="profileImageInput" accept="image/*" hidden>
+                        <div class="image-preview" id="profileImagePreview"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Banner Horizontal (Opcional)</label>
+                    <div class="image-upload" id="bannerImageUpload">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Arraste a imagem ou clique para selecionar</p>
+                        <input type="file" id="bannerImageInput" accept="image/*" hidden>
+                        <div class="image-preview" id="bannerImagePreview"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Social Media Section -->
+            <section class="editor-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-share-alt"></i> Redes Sociais
+                    </h2>
+                    <button class="btn btn-small" id="addSocialBtn">
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
+                </div>
+                <div class="sortable-list" id="socialMediaList">
+                    <!-- Social media items will be added here -->
+                </div>
+            </section>
+
+            <!-- YouTube Section -->
+            <section class="editor-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fab fa-youtube"></i> YouTube
+                    </h2>
+                    <button class="btn btn-small" id="addVideoBtn">
+                        <i class="fas fa-plus"></i> Adicionar Vídeo
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>URL do Canal</label>
+                    <input type="text" id="youtubeChannel" placeholder="https://www.youtube.com/@seucanal">
+                </div>
+                <div class="sortable-list" id="videosList">
+                    <!-- Video items will be added here -->
+                </div>
+            </section>
+
+            <!-- Music Platforms Section -->
+            <section class="editor-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-music"></i> Plataformas de Música
+                    </h2>
+                    <button class="btn btn-small" id="addMusicBtn">
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
+                </div>
+                <div class="sortable-list" id="musicPlatformsList">
+                    <!-- Music platform items will be added here -->
+                </div>
+            </section>
+
+            <!-- Canva Embed Section -->
+            <section class="editor-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-file-powerpoint"></i> Apresentação / Release
+                    </h2>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="canvaEnabled">
+                        <span>Exibir apresentação na página</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Título da Seção</label>
+                    <input type="text" id="canvaTitle" placeholder="Apresentação / Release">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="canvaDescription" placeholder="Conheça mais sobre o projeto">
+                </div>
+                <div class="form-group">
+                    <label>URL do Canva (Link de Compartilhamento)</label>
+                    <input type="text" id="canvaUrl" placeholder="https://www.canva.com/design/...">
+                    <small class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Cole o link de compartilhamento do Canva. Ex: https://www.canva.com/design/XXXXX/view
+                    </small>
+                </div>
+            </section>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="preview-header">
+                <h3><i class="fas fa-eye"></i> Preview Ao Vivo</h3>
+                <button class="btn btn-small" id="refreshPreviewBtn">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+            </div>
+            <div class="preview-container">
+                <iframe id="previewFrame" src="index.html"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Social Media Modal -->
+    <div class="modal" id="socialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Rede Social</h3>
+                <button class="modal-close" id="closeSocialModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Plataforma</label>
+                    <select id="socialPlatform">
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="twitter">Twitter / X</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="whatsapp">WhatsApp</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="socialTitle" placeholder="Instagram">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="socialDescription" placeholder="@seuusuario">
+                </div>
+                <div class="form-group">
+                    <label>URL</label>
+                    <input type="text" id="socialUrl" placeholder="https://instagram.com/seuusuario">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelSocialBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmSocialBtn">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Vídeo</h3>
+                <button class="modal-close" id="closeVideoModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>URL do Vídeo</label>
+                    <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="videoTitle" placeholder="Nome do Vídeo">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="videoDescription" placeholder="Descrição breve">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelVideoBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmVideoBtn">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Music Platform Modal -->
+    <div class="modal" id="musicModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Plataforma</h3>
+                <button class="modal-close" id="closeMusicModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Plataforma</label>
+                    <select id="musicPlatform">
+                        <option value="spotify">Spotify</option>
+                        <option value="deezer">Deezer</option>
+                        <option value="apple-music">Apple Music</option>
+                        <option value="youtube-music">YouTube Music</option>
+                        <option value="soundcloud">SoundCloud</option>
+                        <option value="amazon-music">Amazon Music</option>
+                        <option value="tickets">Ingressos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="musicTitle" placeholder="Spotify">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="musicDescription" placeholder="Ouça no Spotify">
+                </div>
+                <div class="form-group">
+                    <label>URL</label>
+                    <input type="text" id="musicUrl" placeholder="https://open.spotify.com/...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelMusicBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmMusicBtn">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3><i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Confirmar Exclusão</h3>
+                <button class="modal-close" id="closeDeleteModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Tem certeza que deseja remover este item?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="admin-file-selector.js"></script>
+</body>
+
+</html>

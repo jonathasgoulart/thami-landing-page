@@ -1,0 +1,71 @@
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 100px;
+    right: 2rem;
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    animation: slideIn 0.3s ease;
+    max-width: 400px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-success {
+    border-left: 4px solid var(--admin-success);
+}
+
+.notification-success i {
+    color: var(--admin-success);
+}
+
+.notification-info {
+    border-left: 4px solid var(--admin-primary);
+}
+
+.notification-info i {
+    color: var(--admin-primary);
+}
+
+.notification-error {
+    border-left: 4px solid var(--admin-danger);
+}
+
+.notification-error i {
+    color: var(--admin-danger);
+}
+
+.notification span {
+    flex: 1;
+    font-size: 0.875rem;
+}
+
+.notification-close {
+    background: transparent;
+    border: none;
+    color: var(--admin-text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.notification-close:hover {
+    color: var(--admin-text);
+}
