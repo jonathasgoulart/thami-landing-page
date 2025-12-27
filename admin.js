@@ -233,7 +233,10 @@ const platformTitles = {
 // Initialize
 // ===================================
 
-document.addEventListener('DOMContentLoaded', function () {
+// Initialize the admin dashboard
+function initAdmin() {
+    console.log('🚀 Initializing Admin Dashboard...');
+
     // Initialize Supabase first
     initSupabase();
 
@@ -246,7 +249,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if ('showOpenFilePicker' in window) {
         addConfigFileButton();
     }
-});
+
+    console.log('✅ Admin Dashboard initialized!');
+}
+
+// Handle initialization - works even if DOMContentLoaded already fired
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdmin);
+} else {
+    // DOM is already ready
+    initAdmin();
+}
 
 // ===================================
 // Load Existing Config
