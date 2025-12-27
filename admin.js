@@ -261,21 +261,6 @@ if (document.readyState === 'loading') {
     initAdmin();
 }
 
-// ===================================
-// Expose functions to global scope
-// ===================================
-// Required for onclick handlers in HTML to work
-window.editItem = editItem;
-window.removeItem = removeItem;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.addSocialMedia = addSocialMedia;
-window.addVideo = addVideo;
-window.addMusicPlatform = addMusicPlatform;
-window.saveConfig = saveConfig;
-window.updatePreview = updatePreview;
-window.importConfig = importConfig;
-window.resetConfig = resetConfig;
 
 // ===================================
 // Load Existing Config
@@ -1151,3 +1136,20 @@ function resetConfig() {
     showNotification('✅ Configuração restaurada para os dados padrão!', 'success');
     console.log('Config reset to defaults:', config);
 }
+
+// ===================================
+// Expose functions to global scope
+// ===================================
+// Required for onclick handlers in HTML to work
+// Must be at the end of the file, after all functions are defined
+window.editItem = editItem;
+window.removeItem = removeItem;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.addSocialMedia = addSocialMedia;
+window.addVideo = addVideo;
+window.addMusicPlatform = addMusicPlatform;
+window.saveConfig = saveConfig;
+window.updatePreview = updatePreview;
+window.importConfig = importConfig;
+window.resetConfig = resetConfig;
