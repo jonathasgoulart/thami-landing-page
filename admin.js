@@ -1,5 +1,6 @@
 // Admin Dashboard JavaScript
 // Drag-and-Drop Editor for Landing Page
+console.log('📜 admin.js script starting to load...');
 
 // ===================================
 // Supabase Configuration
@@ -8,13 +9,13 @@
 const SUPABASE_URL = 'https://sesftfsjfzknaioqajtq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlc2Z0ZnNqZnprbmFpb3FhanRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3ODY3OTQsImV4cCI6MjA4MjM2Mjc5NH0.pKpGYHxIU3MTHhPbsR8u2F9LV1V5xznwtS_rq9UXis0';
 
-let supabase = null;
+let supabaseClient = null;
 
 // Initialize Supabase client
 function initSupabase() {
     if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('✅ Supabase initialized');
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('✅ Supabase client initialized');
         return true;
     }
     console.warn('⚠️ Supabase SDK not loaded');
@@ -23,39 +24,39 @@ function initSupabase() {
 
 // Save config to Supabase
 async function saveToSupabase(configData) {
-    if (!supabase) {
+    if (!supabaseClient) {
         console.warn('Supabase not initialized, skipping cloud save');
         return false;
     }
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('site_config')
             .upsert({ id: 1, config: configData, updated_at: new Date().toISOString() })
             .select();
 
         if (error) {
-            console.error('Error saving to Supabase:', error);
+            console.error('Error saving to supabaseClient:', error);
             return false;
         }
 
-        console.log('✅ Config saved to Supabase');
+        console.log('✅ Config saved to supabaseClient');
         return true;
     } catch (error) {
-        console.error('Error saving to Supabase:', error);
+        console.error('Error saving to supabaseClient:', error);
         return false;
     }
 }
 
 // Load config from Supabase
 async function loadFromSupabase() {
-    if (!supabase) {
+    if (!supabaseClient) {
         console.warn('Supabase not initialized, skipping cloud load');
         return null;
     }
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('site_config')
             .select('config')
             .eq('id', 1)
@@ -235,31 +236,78 @@ const platformTitles = {
 
 // Initialize the admin dashboard
 function initAdmin() {
-    console.log('🚀 Initializing Admin Dashboard...');
-
-    // Initialize Supabase first
-    initSupabase();
-
-    loadExistingConfig();
-    initializeEventListeners();
-    initializeDeleteModal();
-    renderAll();
-
-    // Add config file selection button (Chrome/Edge only)
-    if ('showOpenFilePicker' in window) {
-        addConfigFileButton();
+    // Prevent double initialization
+    if (window._adminInitialized) {
+        console.log('Admin already initialized, skipping...');
+        return;
     }
 
-    console.log('✅ Admin Dashboard initialized!');
+    try {
+        console.log('🚀 Initializing Admin Dashboard...');
+
+        // Initialize supabaseClient first
+        initSupabase();
+
+        loadExistingConfig();
+        initializeEventListeners();
+        initializeDeleteModal();
+        renderAll();
+
+        // Add config file selection button (Chrome/Edge only)
+        if ('showOpenFilePicker' in window) {
+            addConfigFileButton();
+        }
+
+        // Mark as initialized
+        window._adminInitialized = true;
+        console.log('✅ Admin Dashboard initialized!');
+    } catch (error) {
+        console.error('❌ Error initializing Admin Dashboard:', error);
+    }
 }
 
-// Handle initialization - works even if DOMContentLoaded already fired
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAdmin);
-} else {
-    // DOM is already ready
-    initAdmin();
-}
+// Robust initialization - handles all possible DOM states
+console.log('📜 admin.js IIFE starting...');
+(function () {
+    console.log('📜 Inside IIFE, document.readyState:', document.readyState);
+
+    // Expose functions to global scope immediately
+    // This must happen before any DOM operations
+    window.initAdmin = initAdmin;
+
+    function tryInit() {
+        console.log('📜 tryInit called');
+        try {
+            initAdmin();
+        } catch (e) {
+            console.error('Init error:', e);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        console.log('📜 Document still loading, adding DOMContentLoaded listener');
+        document.addEventListener('DOMContentLoaded', tryInit);
+    } else {
+        // DOM is already ready - run immediately
+        console.log('📜 DOM ready, calling tryInit immediately');
+        tryInit();
+    }
+
+    // Fallback: if for some reason the above didn't work, try again after 500ms
+    setTimeout(function () {
+        console.log('📜 Fallback timeout fired, _adminInitialized:', window._adminInitialized);
+        if (!window._adminInitialized) {
+            console.log('⚠️ Fallback initialization triggered');
+            try {
+                initAdmin();
+                window._adminInitialized = true;
+            } catch (e) {
+                console.error('Fallback init error:', e);
+            }
+        }
+    }, 500);
+})();
+console.log('📜 admin.js IIFE completed');
 
 
 // ===================================
@@ -271,10 +319,10 @@ async function loadExistingConfig() {
     let localConfig = null;
     let fileConfig = null;
 
-    // Try to load from Supabase first (cloud storage - highest priority)
+    // Try to load from supabaseClient first (cloud storage - highest priority)
     supabaseConfig = await loadFromSupabase();
     if (supabaseConfig) {
-        console.log('✅ Using config from Supabase (cloud)');
+        console.log('✅ Using config from supabaseClient (cloud)');
         config = supabaseConfig;
         // Also save to localStorage for offline access
         localStorage.setItem('adminConfig', JSON.stringify(config));
@@ -381,7 +429,7 @@ function saveToLocalStorage() {
     localStorage.setItem('adminConfig', JSON.stringify(config));
     console.log('Config saved to localStorage');
 
-    // Also save to Supabase (async, don't block UI)
+    // Also save to supabaseClient (async, don't block UI)
     saveToSupabase(config);
 }
 
@@ -432,6 +480,40 @@ function initializeEventListeners() {
         config.canvaEmbed.url = e.target.value;
         saveToLocalStorage();
         updatePreview();
+    });
+
+    // Canva Apply button - saves and shows preview
+    document.getElementById('applyCanvaBtn').addEventListener('click', () => {
+        const url = document.getElementById('canvaUrl').value.trim();
+        if (!url) {
+            showNotification('⚠️ Por favor, insira uma URL do Canva', 'warning');
+            return;
+        }
+
+        config.canvaEmbed.url = url;
+        config.canvaEmbed.enabled = true;
+        document.getElementById('canvaEnabled').checked = true;
+        saveToLocalStorage();
+        updatePreview();
+
+        // Show preview
+        showCanvaPreview(url);
+        showNotification('✅ Link do Canva aplicado!', 'success');
+    });
+
+    // Canva Clear button - clears the URL and hides preview
+    document.getElementById('clearCanvaBtn').addEventListener('click', () => {
+        document.getElementById('canvaUrl').value = '';
+        config.canvaEmbed.url = '';
+        config.canvaEmbed.enabled = false;
+        document.getElementById('canvaEnabled').checked = false;
+        saveToLocalStorage();
+        updatePreview();
+
+        // Hide preview
+        const previewContainer = document.getElementById('canvaPreviewContainer');
+        if (previewContainer) previewContainer.style.display = 'none';
+        showNotification('Link do Canva removido', 'info');
     });
 
     // Image uploads
@@ -778,6 +860,7 @@ function renderMusicPlatforms() {
 // ===================================
 
 function editItem(type, index) {
+    console.log('✏️ editItem called with:', type, index);
     let item;
     let modalId;
 
@@ -803,8 +886,8 @@ function editItem(type, index) {
         document.getElementById('musicUrl').value = item.url;
     }
 
-    // Remove the old item before opening modal
-    removeItem(type, index, false); // false = don't confirm
+    // Remove the old item before opening modal (skip confirmation)
+    removeItem(type, index, true); // true = skip confirm, delete silently
 
     // Open modal
     openModal(modalId);
@@ -816,40 +899,91 @@ function editItem(type, index) {
 
 function setupDragAndDrop(listId, type) {
     const list = document.getElementById(listId);
+    if (!list) return;
+
     const items = list.querySelectorAll('.sortable-item');
 
     items.forEach(item => {
-        item.addEventListener('dragstart', handleDragStart);
-        item.addEventListener('dragover', handleDragOver);
-        item.addEventListener('drop', (e) => handleDrop(e, type));
-        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragstart', (e) => {
+            draggedElement = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            console.log('🔄 Drag started:', item.dataset.index);
+        });
+
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            item.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+        });
+
+        item.addEventListener('dragleave', (e) => {
+            item.classList.remove('drag-over');
+        });
+
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            item.classList.remove('drag-over');
+
+            if (draggedElement && draggedElement !== item) {
+                const fromIndex = parseInt(draggedElement.dataset.index);
+                const toIndex = parseInt(item.dataset.index);
+
+                console.log('🔄 Drop: moving from', fromIndex, 'to', toIndex);
+
+                // Reorder array
+                let array;
+                if (type === 'social') array = config.socialMedia;
+                else if (type === 'video') array = config.youtube.videos;
+                else if (type === 'music') array = config.musicPlatforms;
+
+                if (array && !isNaN(fromIndex) && !isNaN(toIndex)) {
+                    const movedItem = array.splice(fromIndex, 1)[0];
+                    array.splice(toIndex, 0, movedItem);
+
+                    // Save and re-render
+                    saveToLocalStorage();
+                    saveToSupabase(config);
+
+                    if (type === 'social') renderSocialMedia();
+                    else if (type === 'video') renderVideos();
+                    else if (type === 'music') renderMusicPlatforms();
+
+                    updatePreview();
+                    showNotification('✅ Ordem atualizada!', 'success');
+                }
+            }
+        });
+
+        item.addEventListener('dragend', (e) => {
+            item.classList.remove('dragging');
+            // Clean up all drag-over classes
+            list.querySelectorAll('.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+            draggedElement = null;
+        });
     });
 }
 
 let draggedElement = null;
 
-function handleDragStart(e) {
-    draggedElement = this;
-    this.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-}
-
-function handleDragOver(e) {
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
-    e.dataTransfer.dropEffect = 'move';
-    return false;
-}
-
 function handleDrop(e, type) {
+    console.log('🔄 handleDrop called, type:', type);
+
     if (e.stopPropagation) {
         e.stopPropagation();
     }
 
+    // Remove drag-over class from this element
+    this.classList.remove('drag-over');
+
     if (draggedElement !== this) {
         const fromIndex = parseInt(draggedElement.dataset.index);
         const toIndex = parseInt(this.dataset.index);
+
+        console.log('🔄 Moving from index', fromIndex, 'to index', toIndex);
 
         // Reorder array
         let array;
@@ -857,17 +991,30 @@ function handleDrop(e, type) {
         else if (type === 'video') array = config.youtube.videos;
         else if (type === 'music') array = config.musicPlatforms;
 
+        if (!array) {
+            console.error('❌ Array not found for type:', type);
+            return false;
+        }
+
+        console.log('🔄 Array before:', array.map(i => i.title));
+
         const item = array.splice(fromIndex, 1)[0];
         array.splice(toIndex, 0, item);
 
+        console.log('🔄 Array after:', array.map(i => i.title));
+
         // Save and re-render
         saveToLocalStorage();
+
+        // Also save to Supabase for persistence
+        saveToSupabase(config);
 
         if (type === 'social') renderSocialMedia();
         else if (type === 'video') renderVideos();
         else if (type === 'music') renderMusicPlatforms();
 
         updatePreview();
+        showNotification('✅ Ordem atualizada!', 'success');
     }
 
     return false;
@@ -875,6 +1022,10 @@ function handleDrop(e, type) {
 
 function handleDragEnd() {
     this.classList.remove('dragging');
+    // Clean up any drag-over classes
+    document.querySelectorAll('.sortable-item.drag-over').forEach(item => {
+        item.classList.remove('drag-over');
+    });
 }
 
 // ===================================
@@ -928,7 +1079,16 @@ function closeDeleteModal() {
     pendingDelete = null;
 }
 
-function removeItem(type, index) {
+function removeItem(type, index, skipConfirm = false) {
+    console.log('🗑️ removeItem called with:', type, index, 'skipConfirm:', skipConfirm);
+
+    // If skipConfirm is true, delete silently (used by editItem)
+    if (skipConfirm) {
+        console.log('🗑️ Skipping confirmation, executing delete directly');
+        executeDelete(type, index);
+        return;
+    }
+
     // Get item name for confirmation message
     let itemName = 'este item';
     if (type === 'social' && config.socialMedia[index]) {
@@ -938,6 +1098,7 @@ function removeItem(type, index) {
     } else if (type === 'music' && config.musicPlatforms[index]) {
         itemName = config.musicPlatforms[index].title;
     }
+    console.log('🗑️ Opening delete modal for:', itemName);
 
     // Open confirmation modal
     openDeleteModal(type, index, itemName);
@@ -1044,6 +1205,57 @@ function extractYouTubeId(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
     return match ? match[1] : null;
+}
+
+// Helper function to convert Canva share URL to embed URL
+function getCanvaEmbedUrl(url) {
+    if (!url) return '';
+
+    // If it already has ?embed parameter, return as is
+    if (url.includes('?embed')) {
+        return url;
+    }
+
+    // Extract design ID and access token from Canva URL
+    // Format: https://www.canva.com/design/DESIGN_ID/ACCESS_TOKEN/view
+    const designMatch = url.match(/canva\.com\/design\/([A-Za-z0-9_-]+)\/([A-Za-z0-9_-]+)/);
+
+    if (designMatch && designMatch[1] && designMatch[2]) {
+        const designId = designMatch[1];
+        const accessToken = designMatch[2];
+        // Canva embed URL format: https://www.canva.com/design/DESIGN_ID/ACCESS_TOKEN/view?embed
+        return `https://www.canva.com/design/${designId}/${accessToken}/view?embed`;
+    }
+
+    // If URL has /view at the end, just add ?embed
+    if (url.endsWith('/view')) {
+        return url + '?embed';
+    }
+
+    // Return original URL with ?embed if format not recognized
+    return url + (url.includes('?') ? '&embed' : '?embed');
+}
+
+// Show Canva preview in admin panel
+function showCanvaPreview(url) {
+    const previewContainer = document.getElementById('canvaPreviewContainer');
+    const preview = document.getElementById('canvaPreview');
+
+    if (!previewContainer || !preview) return;
+
+    const embedUrl = getCanvaEmbedUrl(url);
+
+    preview.innerHTML = `
+        <iframe 
+            src="${embedUrl}" 
+            allowfullscreen="true" 
+            allow="fullscreen"
+            loading="lazy"
+            style="width: 100%; height: 100%; border: none;">
+        </iframe>
+    `;
+
+    previewContainer.style.display = 'block';
 }
 
 // Add config file button (for browsers that support it)
@@ -1153,3 +1365,5 @@ window.saveConfig = saveConfig;
 window.updatePreview = updatePreview;
 window.importConfig = importConfig;
 window.resetConfig = resetConfig;
+
+console.log('📜 admin.js FULLY LOADED - all functions exposed to window');

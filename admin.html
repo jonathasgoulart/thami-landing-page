@@ -146,11 +146,26 @@
                 </div>
                 <div class="form-group">
                     <label>URL do Canva (Link de Compartilhamento)</label>
-                    <input type="text" id="canvaUrl" placeholder="https://www.canva.com/design/...">
+                    <div style="display: flex; gap: 8px; align-items: stretch;">
+                        <input type="text" id="canvaUrl" placeholder="https://www.canva.com/design/..."
+                            style="flex: 1;">
+                        <button class="btn btn-primary" id="applyCanvaBtn" title="Aplicar link do Canva">
+                            <i class="fas fa-check"></i> Aplicar
+                        </button>
+                        <button class="btn btn-secondary" id="clearCanvaBtn" title="Limpar link">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                     <small class="form-hint">
                         <i class="fas fa-info-circle"></i>
                         Cole o link de compartilhamento do Canva. Ex: https://www.canva.com/design/XXXXX/view
                     </small>
+                </div>
+                <div id="canvaPreviewContainer" style="margin-top: 16px; display: none;">
+                    <label>Pré-visualização:</label>
+                    <div id="canvaPreview"
+                        style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; aspect-ratio: 16/9; max-height: 300px;">
+                    </div>
                 </div>
             </section>
         </div>
@@ -302,8 +317,8 @@
         </div>
     </div>
 
-    <script src="admin.js?v=3"></script>
-    <script src="admin-file-selector.js?v=3"></script>
+    <script src="admin.js?v=4"></script>
+    <script src="admin-file-selector.js?v=4"></script>
 </body>
 
 </html>

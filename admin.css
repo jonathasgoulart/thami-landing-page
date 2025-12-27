@@ -269,15 +269,32 @@ body {
 
 .sortable-item.dragging {
     opacity: 0.5;
+    background: var(--admin-primary);
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+}
+
+/* Drag-over indicator */
+.sortable-item.drag-over {
+    border-color: var(--admin-primary);
+    border-style: dashed;
+    background: rgba(139, 92, 246, 0.1);
 }
 
 .drag-handle {
     color: var(--admin-text-secondary);
     cursor: grab;
+    padding: 4px;
+    transition: color 0.2s ease;
+}
+
+.drag-handle:hover {
+    color: var(--admin-primary);
 }
 
 .drag-handle:active {
     cursor: grabbing;
+    color: var(--admin-primary-light);
 }
 
 .item-icon {
