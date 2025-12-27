@@ -88,7 +88,7 @@ const DEFAULT_CONFIG = {
     profile: {
         name: 'THAMI',
         subtitle: 'Cantora • Compositora • Artista',
-        image: 'profile.png',
+        image: 'profile_optimized.jpg',
         bannerImage: ''
     },
     featuredLinks: [
@@ -151,7 +151,7 @@ const DEFAULT_CONFIG = {
                 title: 'Ver Mais Vídeos',
                 description: 'Acesse o canal completo',
                 url: 'https://www.youtube.com/@oficialthami',
-                thumbnail: 'https://via.placeholder.com/400x225/8B5CF6/FFFFFF?text=Mais+Videos'
+                thumbnail: ''
             }
         ]
     },
