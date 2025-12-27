@@ -74,6 +74,25 @@
                 </div>
             </section>
 
+            <!-- Featured Links Section (Shows, Events, Promotions) -->
+            <section class="editor-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i> Links em Destaque
+                    </h2>
+                    <button class="btn btn-small" id="addFeaturedBtn">
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
+                </div>
+                <p class="section-description"
+                    style="color: var(--admin-text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                    Links promocionais que aparecem antes das redes sociais (ex: venda de ingressos, shows, eventos)
+                </p>
+                <div class="sortable-list" id="featuredLinksList">
+                    <!-- Featured links will be added here -->
+                </div>
+            </section>
+
             <!-- Social Media Section -->
             <section class="editor-section">
                 <div class="section-header">
@@ -180,6 +199,51 @@
             </div>
             <div class="preview-container">
                 <iframe id="previewFrame" src="index.html"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Featured Link Modal -->
+    <div class="modal" id="featuredModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Link em Destaque</h3>
+                <button class="modal-close" id="closeFeaturedModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Ícone</label>
+                    <select id="featuredIcon">
+                        <option value="fas fa-ticket-alt">🎫 Ingresso</option>
+                        <option value="fas fa-music">🎵 Música</option>
+                        <option value="fas fa-calendar-alt">📅 Evento</option>
+                        <option value="fas fa-star">⭐ Destaque</option>
+                        <option value="fas fa-fire">🔥 Promoção</option>
+                        <option value="fas fa-gift">🎁 Presente</option>
+                        <option value="fas fa-shopping-cart">🛒 Comprar</option>
+                        <option value="fas fa-microphone">🎤 Show</option>
+                        <option value="fas fa-heart">❤️ Favorito</option>
+                        <option value="fas fa-link">🔗 Link</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="featuredTitle" placeholder="Ex: Ingressos Show SP">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="featuredDescription" placeholder="Ex: 25 de Janeiro - Espaço XYZ">
+                </div>
+                <div class="form-group">
+                    <label>URL</label>
+                    <input type="text" id="featuredUrl" placeholder="https://...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelFeaturedBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmFeaturedBtn">Adicionar</button>
             </div>
         </div>
     </div>

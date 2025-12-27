@@ -91,6 +91,15 @@ const DEFAULT_CONFIG = {
         image: 'profile.png',
         bannerImage: ''
     },
+    featuredLinks: [
+        // Example structure (empty by default):
+        // {
+        //     icon: 'fas fa-ticket-alt',
+        //     title: 'Ingressos Show SP',
+        //     description: '25 de Janeiro - Espaço das Américas',
+        //     url: 'https://...'
+        // }
+    ],
     socialMedia: [
         {
             platform: 'instagram',
@@ -235,10 +244,10 @@ const platformTitles = {
 // ===================================
 
 // Initialize the admin dashboard
-function initAdmin() {
+async function initAdmin() {
     // Prevent double initialization
     if (window._adminInitialized) {
-        console.log('Admin already initialized, skipping...');
+        console.log('⚠️ Admin already initialized, skipping');
         return;
     }
 
@@ -248,9 +257,13 @@ function initAdmin() {
         // Initialize supabaseClient first
         initSupabase();
 
-        loadExistingConfig();
+        // Wait for config to load before rendering
+        await loadExistingConfig();
+
         initializeEventListeners();
         initializeDeleteModal();
+
+        // Now render - config is guaranteed to be loaded
         renderAll();
 
         // Add config file selection button (Chrome/Edge only)
@@ -521,11 +534,13 @@ function initializeEventListeners() {
     setupImageUpload('bannerImageUpload', 'bannerImageInput', 'bannerImagePreview', 'bannerImage');
 
     // Add buttons
+    document.getElementById('addFeaturedBtn').addEventListener('click', () => openModal('featuredModal'));
     document.getElementById('addSocialBtn').addEventListener('click', () => openModal('socialModal'));
     document.getElementById('addVideoBtn').addEventListener('click', () => openModal('videoModal'));
     document.getElementById('addMusicBtn').addEventListener('click', () => openModal('musicModal'));
 
     // Modal buttons
+    setupModal('featuredModal', 'closeFeaturedModal', 'cancelFeaturedBtn', 'confirmFeaturedBtn', addFeaturedLink);
     setupModal('socialModal', 'closeSocialModal', 'cancelSocialBtn', 'confirmSocialBtn', addSocialMedia);
     setupModal('videoModal', 'closeVideoModal', 'cancelVideoBtn', 'confirmVideoBtn', addVideo);
     setupModal('musicModal', 'closeMusicModal', 'cancelMusicBtn', 'confirmMusicBtn', addMusicPlatform);
@@ -567,8 +582,19 @@ function setupImageUpload(uploadId, inputId, previewId, configKey) {
     const input = document.getElementById(inputId);
     const preview = document.getElementById(previewId);
 
-    // Click to upload
-    uploadArea.addEventListener('click', () => input.click());
+    if (!uploadArea || !input || !preview) {
+        console.warn('Missing elements for image upload:', uploadId);
+        return;
+    }
+
+    // Click to upload - but not if clicking on the preview image
+    uploadArea.addEventListener('click', (e) => {
+        // Only trigger if clicking the upload area itself, not on an img inside
+        if (e.target === uploadArea || e.target.classList.contains('upload-icon') ||
+            e.target.classList.contains('upload-text') || e.target.tagName === 'I') {
+            input.click();
+        }
+    });
 
     // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
@@ -594,6 +620,8 @@ function setupImageUpload(uploadId, inputId, previewId, configKey) {
         const file = e.target.files[0];
         if (file) {
             handleImageFile(file, preview, configKey);
+            // Reset input so same file can be selected again
+            input.value = '';
         }
     });
 }
@@ -606,19 +634,36 @@ function handleImageFile(file, previewElement, configKey) {
         // Show preview
         const img = document.createElement('img');
         img.src = base64Image;
+        img.style.cursor = 'pointer';
+        img.title = 'Clique para trocar a imagem';
+        img.addEventListener('click', (evt) => {
+            evt.stopPropagation();
+            // Find the input for this preview
+            const uploadArea = previewElement.closest('.upload-area');
+            if (uploadArea) {
+                const input = uploadArea.querySelector('input[type="file"]');
+                if (input) input.click();
+            }
+        });
+
         previewElement.innerHTML = '';
         previewElement.appendChild(img);
         previewElement.classList.add('active');
 
         // Save base64 to config (so it works with localStorage)
-        config.profile[configKey] = base64Image;
+        if (configKey === 'bannerImage') {
+            config.profile.bannerImage = base64Image;
+        } else {
+            config.profile[configKey] = base64Image;
+        }
 
         // Save to localStorage
         saveToLocalStorage();
 
-        // Update preview
+        // Update preview iframe
         updatePreview();
 
+        showNotification('✅ Imagem atualizada!', 'success');
         console.log('Image uploaded:', configKey);
     };
     reader.readAsDataURL(file);
@@ -636,6 +681,8 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
     // Clear form fields
     clearModalFields(modalId);
+    // Clear editing state (if user cancels edit, item is NOT deleted)
+    editingItem = null;
 }
 
 function clearModalFields(modalId) {
@@ -657,14 +704,59 @@ function setupModal(modalId, closeId, cancelId, confirmId, confirmCallback) {
 // Add Items
 // ===================================
 
+function addFeaturedLink() {
+    const icon = document.getElementById('featuredIcon').value;
+    const title = document.getElementById('featuredTitle').value;
+    const description = document.getElementById('featuredDescription').value;
+    const url = ensureUrlProtocol(document.getElementById('featuredUrl').value);
+
+    if (!title || !url) {
+        showNotification('⚠️ Por favor, preencha o título e a URL', 'warning');
+        return;
+    }
+
+    // Ensure array exists
+    if (!config.featuredLinks) {
+        config.featuredLinks = [];
+    }
+
+    const link = {
+        icon,
+        title,
+        description,
+        url
+    };
+
+    // Check if we're editing or adding
+    if (editingItem && editingItem.type === 'featured') {
+        // Update existing item
+        config.featuredLinks[editingItem.index] = link;
+        showNotification('✅ Link atualizado!', 'success');
+        editingItem = null;
+    } else {
+        // Add new item
+        config.featuredLinks.push(link);
+        showNotification('✅ Link em destaque adicionado!', 'success');
+    }
+
+    saveToLocalStorage();
+    renderFeaturedLinks();
+    updatePreview();
+
+    // Clear form
+    document.getElementById('featuredTitle').value = '';
+    document.getElementById('featuredDescription').value = '';
+    document.getElementById('featuredUrl').value = '';
+}
+
 function addSocialMedia() {
     const platform = document.getElementById('socialPlatform').value;
     const title = document.getElementById('socialTitle').value || platformTitles[platform];
     const description = document.getElementById('socialDescription').value;
-    const url = document.getElementById('socialUrl').value;
+    const url = ensureUrlProtocol(document.getElementById('socialUrl').value);
 
     if (!url) {
-        alert('Por favor, insira a URL');
+        showNotification('⚠️ Por favor, insira a URL', 'warning');
         return;
     }
 
@@ -676,7 +768,16 @@ function addSocialMedia() {
         icon: platformIcons[platform]
     };
 
-    config.socialMedia.push(social);
+    // Check if we're editing or adding
+    if (editingItem && editingItem.type === 'social') {
+        config.socialMedia[editingItem.index] = social;
+        showNotification('✅ Rede social atualizada!', 'success');
+        editingItem = null;
+    } else {
+        config.socialMedia.push(social);
+        showNotification('✅ Rede social adicionada!', 'success');
+    }
+
     saveToLocalStorage();
     renderSocialMedia();
     updatePreview();
@@ -688,12 +789,12 @@ function addSocialMedia() {
 }
 
 function addVideo() {
-    const url = document.getElementById('videoUrl').value;
+    const url = ensureUrlProtocol(document.getElementById('videoUrl').value);
     const title = document.getElementById('videoTitle').value;
     const description = document.getElementById('videoDescription').value;
 
     if (!url || !title) {
-        alert('Por favor, preencha a URL e o título do vídeo');
+        showNotification('⚠️ Por favor, preencha a URL e o título do vídeo', 'warning');
         return;
     }
 
@@ -708,7 +809,16 @@ function addVideo() {
         thumbnail
     };
 
-    config.youtube.videos.push(video);
+    // Check if we're editing or adding
+    if (editingItem && editingItem.type === 'video') {
+        config.youtube.videos[editingItem.index] = video;
+        showNotification('✅ Vídeo atualizado!', 'success');
+        editingItem = null;
+    } else {
+        config.youtube.videos.push(video);
+        showNotification('✅ Vídeo adicionado!', 'success');
+    }
+
     saveToLocalStorage();
     renderVideos();
     updatePreview();
@@ -723,10 +833,10 @@ function addMusicPlatform() {
     const platform = document.getElementById('musicPlatform').value;
     const title = document.getElementById('musicTitle').value || platformTitles[platform];
     const description = document.getElementById('musicDescription').value;
-    const url = document.getElementById('musicUrl').value;
+    const url = ensureUrlProtocol(document.getElementById('musicUrl').value);
 
     if (!url) {
-        alert('Por favor, insira a URL');
+        showNotification('⚠️ Por favor, insira a URL', 'warning');
         return;
     }
 
@@ -738,7 +848,16 @@ function addMusicPlatform() {
         icon: platformIcons[platform]
     };
 
-    config.musicPlatforms.push(music);
+    // Check if we're editing or adding
+    if (editingItem && editingItem.type === 'music') {
+        config.musicPlatforms[editingItem.index] = music;
+        showNotification('✅ Plataforma atualizada!', 'success');
+        editingItem = null;
+    } else {
+        config.musicPlatforms.push(music);
+        showNotification('✅ Plataforma adicionada!', 'success');
+    }
+
     saveToLocalStorage();
     renderMusicPlatforms();
     updatePreview();
@@ -754,9 +873,48 @@ function addMusicPlatform() {
 // ===================================
 
 function renderAll() {
+    renderFeaturedLinks();
     renderSocialMedia();
     renderVideos();
     renderMusicPlatforms();
+}
+
+function renderFeaturedLinks() {
+    const list = document.getElementById('featuredLinksList');
+    if (!list) return;
+
+    // Ensure featuredLinks array exists
+    if (!config.featuredLinks) {
+        config.featuredLinks = [];
+    }
+
+    if (config.featuredLinks.length === 0) {
+        list.innerHTML = '<p class="empty-message">Nenhum link em destaque. Adicione links para shows, eventos ou promoções.</p>';
+        return;
+    }
+
+    list.innerHTML = config.featuredLinks.map((item, index) => `
+        <div class="sortable-item" draggable="true" data-index="${index}" data-type="featured">
+            <i class="fas fa-grip-vertical drag-handle"></i>
+            <div class="item-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">
+                <i class="${item.icon}"></i>
+            </div>
+            <div class="item-content">
+                <div class="item-title">${item.title}</div>
+                <div class="item-description">${item.description || item.url}</div>
+            </div>
+            <div class="item-actions">
+                <button class="item-action edit-btn" onclick="editItem('featured', ${index})" title="Editar">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="item-action delete-btn" onclick="removeItem('featured', ${index})" title="Excluir">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    setupDragAndDrop('featuredLinksList', 'featured');
 }
 
 function renderSocialMedia() {
@@ -859,12 +1017,25 @@ function renderMusicPlatforms() {
 // Edit Items
 // ===================================
 
+// Store editing state
+let editingItem = null; // { type: 'social', index: 0 }
+
 function editItem(type, index) {
     console.log('✏️ editItem called with:', type, index);
     let item;
     let modalId;
 
-    if (type === 'social') {
+    // Store what we're editing
+    editingItem = { type, index };
+
+    if (type === 'featured') {
+        item = config.featuredLinks[index];
+        modalId = 'featuredModal';
+        document.getElementById('featuredIcon').value = item.icon;
+        document.getElementById('featuredTitle').value = item.title;
+        document.getElementById('featuredDescription').value = item.description || '';
+        document.getElementById('featuredUrl').value = item.url;
+    } else if (type === 'social') {
         item = config.socialMedia[index];
         modalId = 'socialModal';
         document.getElementById('socialPlatform').value = item.platform;
@@ -886,11 +1057,13 @@ function editItem(type, index) {
         document.getElementById('musicUrl').value = item.url;
     }
 
-    // Remove the old item before opening modal (skip confirmation)
-    removeItem(type, index, true); // true = skip confirm, delete silently
-
-    // Open modal
+    // Open modal (DON'T delete the item!)
     openModal(modalId);
+}
+
+// Clear editing state when modal is closed
+function clearEditingState() {
+    editingItem = null;
 }
 
 // ===================================
@@ -934,7 +1107,8 @@ function setupDragAndDrop(listId, type) {
 
                 // Reorder array
                 let array;
-                if (type === 'social') array = config.socialMedia;
+                if (type === 'featured') array = config.featuredLinks;
+                else if (type === 'social') array = config.socialMedia;
                 else if (type === 'video') array = config.youtube.videos;
                 else if (type === 'music') array = config.musicPlatforms;
 
@@ -946,7 +1120,8 @@ function setupDragAndDrop(listId, type) {
                     saveToLocalStorage();
                     saveToSupabase(config);
 
-                    if (type === 'social') renderSocialMedia();
+                    if (type === 'featured') renderFeaturedLinks();
+                    else if (type === 'social') renderSocialMedia();
                     else if (type === 'video') renderVideos();
                     else if (type === 'music') renderMusicPlatforms();
 
@@ -1091,7 +1266,9 @@ function removeItem(type, index, skipConfirm = false) {
 
     // Get item name for confirmation message
     let itemName = 'este item';
-    if (type === 'social' && config.socialMedia[index]) {
+    if (type === 'featured' && config.featuredLinks && config.featuredLinks[index]) {
+        itemName = config.featuredLinks[index].title;
+    } else if (type === 'social' && config.socialMedia[index]) {
         itemName = config.socialMedia[index].title;
     } else if (type === 'video' && config.youtube.videos[index]) {
         itemName = config.youtube.videos[index].title;
@@ -1105,7 +1282,10 @@ function removeItem(type, index, skipConfirm = false) {
 }
 
 function executeDelete(type, index) {
-    if (type === 'social') {
+    if (type === 'featured') {
+        config.featuredLinks.splice(index, 1);
+        renderFeaturedLinks();
+    } else if (type === 'social') {
         config.socialMedia.splice(index, 1);
         renderSocialMedia();
     } else if (type === 'video') {
@@ -1128,14 +1308,28 @@ function executeDelete(type, index) {
 function updatePreview() {
     const iframe = document.getElementById('previewFrame');
 
-    // Wait for iframe to load if not ready
-    if (!iframe.contentWindow) {
-        iframe.addEventListener('load', () => {
-            sendConfigToPreview(iframe);
-        }, { once: true });
-    } else {
-        sendConfigToPreview(iframe);
+    if (!iframe) return;
+
+    // First, try to send config via postMessage
+    if (iframe.contentWindow) {
+        try {
+            iframe.contentWindow.postMessage({
+                type: 'updateConfig',
+                config: config
+            }, '*');
+            console.log('📤 Sent config to preview iframe');
+        } catch (error) {
+            console.log('Could not send postMessage, reloading iframe');
+        }
     }
+
+    // Also reload the iframe to ensure latest changes are applied
+    // This is needed because postMessage might not work for file:// URLs
+    const currentSrc = iframe.src;
+    iframe.src = '';
+    setTimeout(() => {
+        iframe.src = currentSrc;
+    }, 100);
 }
 
 function sendConfigToPreview(iframe) {
@@ -1205,6 +1399,18 @@ function extractYouTubeId(url) {
     const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = url.match(regex);
     return match ? match[1] : null;
+}
+
+// Helper function to ensure URL has protocol (https://)
+function ensureUrlProtocol(url) {
+    if (!url) return url;
+    url = url.trim();
+
+    // If URL doesn't start with http:// or https://, add https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return 'https://' + url;
+    }
+    return url;
 }
 
 // Helper function to convert Canva share URL to embed URL
@@ -1358,6 +1564,7 @@ window.editItem = editItem;
 window.removeItem = removeItem;
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.addFeaturedLink = addFeaturedLink;
 window.addSocialMedia = addSocialMedia;
 window.addVideo = addVideo;
 window.addMusicPlatform = addMusicPlatform;
@@ -1365,5 +1572,6 @@ window.saveConfig = saveConfig;
 window.updatePreview = updatePreview;
 window.importConfig = importConfig;
 window.resetConfig = resetConfig;
+window.renderFeaturedLinks = renderFeaturedLinks;
 
 console.log('📜 admin.js FULLY LOADED - all functions exposed to window');

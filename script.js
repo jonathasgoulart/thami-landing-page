@@ -90,6 +90,15 @@ async function loadConfig() {
     populatePage();
 }
 
+// Listen for config updates from admin panel (when embedded in iframe)
+window.addEventListener('message', function (event) {
+    if (event.data && event.data.type === 'updateConfig') {
+        console.log('📨 Received config update from admin');
+        config = event.data.config;
+        populatePage();
+    }
+});
+
 // Populate page with configuration data
 function populatePage() {
     if (!config) return;
@@ -111,6 +120,33 @@ function populatePage() {
             heroBannerImage.src = config.profile.bannerImage;
             heroBanner.style.display = 'block';
         }
+    }
+
+    // Update Featured Links section (shows, events, promotions)
+    if (config.featuredLinks && config.featuredLinks.length > 0) {
+        const featuredSection = document.getElementById('featured-links');
+        const featuredGrid = document.getElementById('featuredLinksGrid');
+
+        if (featuredSection && featuredGrid) {
+            featuredSection.style.display = 'block';
+
+            featuredGrid.innerHTML = config.featuredLinks.map(link => `
+                <a href="${link.url}" target="_blank" class="link-card featured-link" data-type="featured">
+                    <div class="link-icon featured-icon">
+                        <i class="${link.icon}"></i>
+                    </div>
+                    <div class="link-content">
+                        <h3 class="link-title">${link.title}</h3>
+                        <p class="link-description">${link.description}</p>
+                    </div>
+                    <i class="fas fa-arrow-right link-arrow"></i>
+                </a>
+            `).join('');
+        }
+    } else {
+        // Hide section if no featured links
+        const featuredSection = document.getElementById('featured-links');
+        if (featuredSection) featuredSection.style.display = 'none';
     }
 
     // Update social media links
