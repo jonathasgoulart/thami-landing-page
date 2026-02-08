@@ -7,7 +7,9 @@ import { MessageBoard } from "@/components/MessageBoard";
 export const revalidate = 0; // Disable cache for Phase 1 (Local JSON) to see instant updates
 
 export default async function Home() {
+  console.log('🚀 RENDERING HOME PAGE...');
   const content = await getSiteContent();
+  console.log('✅ Content fetched:', content ? 'Found' : 'Null');
   const messages = await getMessages();
 
   return (
