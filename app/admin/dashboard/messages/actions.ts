@@ -1,13 +1,9 @@
 'use server'
 
-import { saveMessage, updateMessageStatus, deleteMessage as deleteMsgDb, getMessages, updateSiteContent } from '@/lib/db';
+import { saveMessage, updateMessageStatus, deleteMessage as deleteMsgDb, getMessages, replyMessageDb } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { randomUUID } from 'crypto';
-import fs from 'fs/promises';
-import path from 'path';
-
-const MESSAGES_FILE = path.join(process.cwd(), 'data/messages.json');
 
 export async function submitMessage(prevState: any, formData: FormData) {
     try {
@@ -38,32 +34,27 @@ export async function replyMessage(id: string, replyText: string) {
     const session = (await cookies()).get('admin_session');
     if (!session) return { message: '❌ Não autorizado.' };
 
-    const messages = await getMessages();
-    const updated = messages.map((msg: any) =>
-        msg.id === id ? { ...msg, reply: replyText } : msg
-    );
-
-    // Low-level write (should actally be in lib/db but ok here for speed)
-    await fs.writeFile(MESSAGES_FILE, JSON.stringify(updated, null, 2));
+    await replyMessageDb(id, replyText);
 
     revalidatePath('/admin/dashboard/messages');
     revalidatePath('/');
     return { message: '✅ Resposta enviada.' };
 }
 
-// Keep existing approveMessage (just in case they want to hide/show later)
-export async function approveMessage(id: string) {
+// Fixed signature for form action compatibility (FormData as second arg)
+export async function approveMessage(id: string, formData?: FormData) {
     const session = (await cookies()).get('admin_session');
-    if (!session) return { message: '❌ Não autorizado.' };
+    if (!session) return; // Return void/undefined to satisfy signature
 
     await updateMessageStatus(id, true);
     revalidatePath('/admin/dashboard/messages');
     revalidatePath('/');
 }
 
-export async function deleteMessage(id: string) {
+// Fixed signature for form action compatibility
+export async function deleteMessage(id: string, formData?: FormData) {
     const session = (await cookies()).get('admin_session');
-    if (!session) return { message: '❌ Não autorizado.' };
+    if (!session) return;
 
     await deleteMsgDb(id);
     revalidatePath('/admin/dashboard/messages');
