@@ -1,0 +1,70 @@
+{
+  "hero": {
+    "eyebrow": "NOVO SINGLE",
+    "title": "FIQUEI ASSIM",
+    "artist": "THAMI",
+    "feat": "PART. RASHID",
+    "releaseDate": "27 DE FEVEREIRO • 2026",
+    "ctaText": "PRÉ-SAVE",
+    "ctaLink": "https://unitedmasters.com/m/fiquei-assim"
+  },
+  "story": {
+    "title": "Às vezes, a música só precisa de 3 acordes e um suspiro de alívio.",
+    "body": "Eu passei horas tentando dar vida a uma ideia que não queria nascer. Sabe aquele cansaço de quem está lutando contra a própria criatividade? Pois é. Eu estava lá, exausta de uma música que não saía... até que, no cansaço, eu desisti de tentar e apenas senti.\r\n\r\nEm poucos minutos, em cima de uma base de violão de apenas 3 acordes, nasceu \"Fiquei Assim\". O que era pra ser \"Sorrindo\", virou um desabafo leve, fluido, inesperado.\r\n\r\nMandei pro @dudaraupp e vi a mágica ganhar corpo. Mas quando ela estava \"pronta\", eu senti um silêncio que só uma voz poderia preencher. Eu ouvia o @mcrashid exatamente ali, dividindo esse sentimento comigo. E quando o encontro aconteceu, a música finalmente descansou.\r\n\r\nÀs vezes, o que a gente mais luta pra criar não chega nem perto do que o universo nos entrega quando a gente finalmente relaxa.",
+    "signature": "— THAMI"
+  },
+  "socials": {
+    "spotify": "https://open.spotify.com/intl-pt/artist/6fupiyOvfbI12eijANkwZL",
+    "instagram": "https://www.instagram.com/oficialthami",
+    "tiktok": "https://www.tiktok.com/@oficialthami",
+    "whatsapp": "5521999999999",
+    "email": "contatothami@hotmail.com"
+  },
+  "gallery": [
+    {
+      "id": "a127c720-bbe8-4461-af0f-635b6178cdc1",
+      "type": "image",
+      "url": "/uploads/e987f6a9-5157-4564-956f-107be080eaff",
+      "caption": "Tudo começa na letra"
+    },
+    {
+      "id": "dddc2bd7-5601-4354-a1ac-614002d987bc",
+      "type": "image",
+      "url": "/uploads/6355c37c-843b-4221-b74f-ff936d1d6d38",
+      "caption": "Estúdio: A melhor parte"
+    },
+    {
+      "id": "97deff54-3d25-4703-9d0b-b4ba44e5d226",
+      "type": "image",
+      "url": "/uploads/33c1d554-c827-4d36-a9e0-cb7cb2058016",
+      "caption": "#CONCEITO"
+    },
+    {
+      "id": "6ec23915-a558-487f-8889-ed90e21c3f2a",
+      "type": "image",
+      "url": "/uploads/a8b9f576-48ce-42d6-aacf-ca6338b068af",
+      "caption": "Minha preferida"
+    },
+    {
+      "id": "8451a61a-9105-4e2f-befc-cecb6e9353ee",
+      "type": "image",
+      "url": "/uploads/e8de0f17-941f-4b2c-946b-f1a42eae7b3f",
+      "caption": "A capa da Playlist #Fé"
+    }
+  ],
+  "theme": {
+    "primaryColor": "#4a9d7a",
+    "accentColor": "#d4c4a8",
+    "watermark": "/uploads/watermark-1770557157204.jpg"
+  },
+  "contact": {
+    "email": "contatothami@hotmail.com",
+    "whatsapp": "5521972086599",
+    "bookingText": "Para shows e eventos",
+    "instagram": "https://www.instagram.com/oficialthami/",
+    "spotify": "https://open.spotify.com/intl-pt/artist/6fupiyOvfbI12eijANkwZL",
+    "youtube": "https://www.youtube.com/@OFICIALTHAMI/videos",
+    "twitter": "",
+    "tiktok": "https://www.tiktok.com/@oficialthami"
+  }
+}
