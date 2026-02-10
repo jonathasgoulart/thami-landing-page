@@ -120,7 +120,7 @@ export function MessageBoard({ messages, contact }: { messages: any[], contact: 
                                     <div className="flex items-center gap-2 border-t border-white/5 pt-3 mb-2">
                                         <span className="text-xs font-bold text-primary uppercase tracking-wider">{msg.name}</span>
                                         <span className="text-[10px] text-white/20">•</span>
-                                        <span className="text-[10px] text-white/30">{new Date(msg.createdAt).toLocaleDateString()}</span>
+                                        <span className="text-[10px] text-white/30">{new Date(msg.created_at).toLocaleDateString()}</span>
                                     </div>
 
                                     {/* Artist Reply */}

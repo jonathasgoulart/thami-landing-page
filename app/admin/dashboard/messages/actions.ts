@@ -18,7 +18,7 @@ export async function submitMessage(prevState: any, formData: FormData) {
             text,
             approved: true, // AUTO-APPROVED by default now
             reply: null,    // Init reply as null
-            createdAt: new Date().toISOString(),
+            created_at: new Date().toISOString(),
         };
 
         await saveMessage(newMessage);
@@ -26,6 +26,7 @@ export async function submitMessage(prevState: any, formData: FormData) {
         revalidatePath('/');
         return { message: '✅ Recado enviado!' }; // Removed "Aguardando aprovação"
     } catch (error) {
+        console.error('Error submitting message:', error);
         return { message: '❌ Erro ao enviar.' };
     }
 }
