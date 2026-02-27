@@ -21,6 +21,8 @@ export const metadata: Metadata = {
 };
 
 import { Watermark } from "@/components/Watermark";
+import { FacebookPixel } from "@/components/FacebookPixel";
+import { Analytics } from "@/components/Analytics";
 import { getSiteContent } from "@/lib/db";
 
 export default async function RootLayout({
@@ -35,6 +37,8 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${cormorant.variable} antialiased bg-background text-foreground font-sans`}
       >
+        <FacebookPixel />
+        <Analytics />
         <Watermark url={content.theme?.watermark} />
         {children}
       </body>
