@@ -56,7 +56,7 @@ export default function Hero({ content }: HeroProps) {
                 <div className="glass-panel p-[2px] rounded-xl shadow-2xl border border-white/10 bg-black/60 backdrop-blur-md transform scale-95 md:scale-100 origin-bottom">
                     <iframe
                         style={{ borderRadius: '10px' }}
-                        src="https://open.spotify.com/embed/artist/6fupiyOvfbI12eijANkwZL?utm_source=generator&theme=0"
+                        src="https://open.spotify.com/embed/album/6lwP5k0KjFzM2Rk1sIdCfN?utm_source=generator&theme=0"
                         width="100%"
                         height="152"
                         frameBorder="0"
