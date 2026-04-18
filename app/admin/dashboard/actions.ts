@@ -20,6 +20,9 @@ export async function updateHero(prevState: any, formData: FormData) {
             releaseDate: formData.get('releaseDate') as string,
             ctaText: formData.get('ctaText') as string,
             ctaLink: formData.get('ctaLink') as string,
+            youtubeCtaText: formData.get('youtubeCtaText') as string,
+            youtubeCtaLink: formData.get('youtubeCtaLink') as string,
+            spotifyEmbedUrl: formData.get('spotifyEmbedUrl') as string,
         };
 
         await updateSiteContent({

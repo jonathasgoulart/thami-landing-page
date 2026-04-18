@@ -8,8 +8,11 @@ interface HeroProps {
         artist: string;
         feat: string;
         releaseDate: string;
-        ctaText: string;
-        ctaLink: string;
+        ctaText?: string;
+        ctaLink?: string;
+        youtubeCtaText?: string;
+        youtubeCtaLink?: string;
+        spotifyEmbedUrl?: string;
     }
 }
 
@@ -40,15 +43,29 @@ export default function Hero({ content }: HeroProps) {
                     {content.releaseDate}
                 </p>
 
-                <Link
-                    href={content.ctaLink || '#'}
-                    target="_blank"
-                    className="mt-4 md:mt-6 group relative inline-flex items-center gap-2 md:gap-3 px-6 py-2 md:px-8 md:py-3 bg-primary text-white font-serif text-sm md:text-lg tracking-wider hover:bg-primary/90 transition-all duration-300 rounded-sm overflow-hidden shadow-lg shadow-primary/20"
-                >
-                    <span className="relative z-10 whitespace-nowrap">{content.ctaText}</span>
-                    <MoveRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-                    <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-6 items-center">
+                    <Link
+                        href={content.ctaLink || '#'}
+                        target="_blank"
+                        className="group relative inline-flex items-center gap-2 md:gap-3 px-6 py-2 md:px-8 md:py-3 bg-primary text-white font-serif text-sm md:text-lg tracking-wider hover:bg-primary/90 transition-all duration-300 rounded-sm overflow-hidden shadow-lg shadow-primary/20"
+                    >
+                        <span className="relative z-10 whitespace-nowrap">{content.ctaText}</span>
+                        <MoveRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform relative z-10" />
+                        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    </Link>
+
+                    {content.youtubeCtaLink && content.youtubeCtaText && (
+                        <Link
+                            href={content.youtubeCtaLink}
+                            target="_blank"
+                            className="group relative inline-flex items-center gap-2 md:gap-3 px-6 py-2 md:px-8 md:py-3 bg-red-600 text-white font-serif text-sm md:text-lg tracking-wider hover:bg-red-700 transition-all duration-300 rounded-sm overflow-hidden shadow-lg shadow-red-600/20"
+                        >
+                            <span className="relative z-10 whitespace-nowrap">{content.youtubeCtaText}</span>
+                            <MoveRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform relative z-10" />
+                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        </Link>
+                    )}
+                </div>
             </div>
 
             {/* Spotify Player - Fixed Bottom (Small Padding on Mobile) */}
@@ -56,7 +73,7 @@ export default function Hero({ content }: HeroProps) {
                 <div className="glass-panel p-[2px] rounded-xl shadow-2xl border border-white/10 bg-black/60 backdrop-blur-md transform scale-95 md:scale-100 origin-bottom">
                     <iframe
                         style={{ borderRadius: '10px' }}
-                        src="https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0"
+                        src={content.spotifyEmbedUrl || "https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0"}
                         width="100%"
                         height="152"
                         frameBorder="0"

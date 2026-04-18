@@ -48,9 +48,24 @@ export function HeroForm({ data }: { data: any }) {
                     <input name="ctaText" defaultValue={data.ctaText} className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-foreground focus:border-primary focus:outline-none" />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2 md:col-span-1">
                     <label className="text-xs uppercase tracking-wider text-accent opacity-70">Botão (CTA) Link</label>
                     <input name="ctaLink" type="url" defaultValue={data.ctaLink} className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-foreground focus:border-primary focus:outline-none" />
+                </div>
+
+                <div className="space-y-2 md:col-span-1">
+                    <label className="text-xs uppercase tracking-wider text-accent opacity-70">Botão YouTube Texto</label>
+                    <input name="youtubeCtaText" defaultValue={data.youtubeCtaText} placeholder="Assista ao Clipe" className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-foreground focus:border-primary focus:outline-none" />
+                </div>
+
+                <div className="space-y-2 md:col-span-1">
+                    <label className="text-xs uppercase tracking-wider text-accent opacity-70">Botão YouTube Link</label>
+                    <input name="youtubeCtaLink" type="url" defaultValue={data.youtubeCtaLink} placeholder="https://youtube.com/..." className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-foreground focus:border-primary focus:outline-none" />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                    <label className="text-xs uppercase tracking-wider text-accent opacity-70">Spotify Embed URL (Opções -&gt; Compartilhar -&gt; Incorporar Faixa)</label>
+                    <input name="spotifyEmbedUrl" type="url" defaultValue={data.spotifyEmbedUrl} placeholder="https://open.spotify.com/embed/track/..." className="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-foreground focus:border-primary focus:outline-none" />
                 </div>
 
                 <div className="md:col-span-2 pt-4 border-t border-white/5 flex justify-end">
