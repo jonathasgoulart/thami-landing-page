@@ -16,7 +16,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Fiquei Assim - THAMI",
+  title: "THAMI",
   description: "Experiência Vintage R&B - Ouça agora o novo single",
 };
 
