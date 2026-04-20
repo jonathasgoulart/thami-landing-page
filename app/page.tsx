@@ -33,11 +33,11 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Gallery Section - Carousel */}
-      <Gallery images={content.gallery} />
-
       {/* Bio Section - Horizontal Scroll Cards */}
       <BioSection cards={content.bioCards || []} />
+
+      {/* Gallery Section - Carousel */}
+      <Gallery images={content.gallery} />
 
       {/* Contact & Message Board Section (Unified) */}
       <MessageBoard messages={messages} contact={content.contact} />
