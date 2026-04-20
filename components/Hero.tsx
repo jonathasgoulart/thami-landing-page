@@ -22,6 +22,33 @@ interface HeroProps {
 export default function Hero({ content }: HeroProps) {
     if (!content) return null;
 
+    // Helper to safely parse user input (iframe, normal url, or intl url) to an embed url
+    const getCleanSpotifyUrl = (input: string | undefined): string => {
+        if (!input) return "https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0";
+        
+        // If user pasted an iframe
+        if (input.includes("<iframe") && input.includes("src=")) {
+            const match = input.match(/src="([^"]+)"/);
+            if (match && match[1]) return match[1];
+        }
+        
+        // If user pasted a standard URL
+        let url = input.trim();
+        // Remove intl-pt or similar locale strings from the URL paths
+        url = url.replace(/open\.spotify\.com\/[a-z]{2}-[a-z]{2}\//, 'open.spotify.com/');
+        
+        // Convert to embed URL if it's not already
+        if (url.includes("open.spotify.com/track/")) {
+            url = url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/");
+        } else if (url.includes("open.spotify.com/album/")) {
+            url = url.replace("open.spotify.com/album/", "open.spotify.com/embed/album/");
+        }
+        
+        return url;
+    };
+
+    const finalSpotifyUrl = getCleanSpotifyUrl(content.spotifyEmbedUrl);
+
     return (
         <section className="relative h-[100dvh] min-h-[600px] flex flex-col items-center justify-between overflow-hidden">
             {/* Background Gradient */}
@@ -78,7 +105,7 @@ export default function Hero({ content }: HeroProps) {
                 <div className="glass-panel p-[2px] rounded-xl shadow-2xl border border-white/10 bg-black/60 backdrop-blur-md transform scale-95 md:scale-100 origin-bottom">
                     <iframe
                         style={{ borderRadius: '10px' }}
-                        src={content.spotifyEmbedUrl || "https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0"}
+                        src={finalSpotifyUrl}
                         width="100%"
                         height="152"
                         frameBorder="0"
