@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useActionState } from 'react';
+import { useState, useActionState, useRef, startTransition } from 'react';
 import imageCompression from 'browser-image-compression';
 import { updateBioCard } from '@/app/admin/dashboard/bio/actions';
-import { Pencil, Upload, Loader2, X, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { Upload, Loader2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface BioCard {
     id: string;
@@ -21,8 +21,20 @@ function BioCardEditor({ card }: { card: BioCard }) {
     const [labelValue, setLabelValue] = useState(card.label);
     const [titleValue, setTitleValue] = useState(card.title);
     const [textValue, setTextValue] = useState(card.text);
+    const formRef = useRef<HTMLFormElement>(null);
 
-    const [state, formAction, isPending] = useActionState(updateBioCard, { message: '' });
+    const [state, dispatch, isPending] = useActionState(updateBioCard, { message: '' });
+
+    function handleSubmit() {
+        if (!formRef.current) return;
+        const formData = new FormData(formRef.current);
+        if (compressedFile) {
+            formData.set('imageFile', compressedFile);
+        }
+        startTransition(() => {
+            dispatch(formData);
+        });
+    }
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -75,12 +87,7 @@ function BioCardEditor({ card }: { card: BioCard }) {
             {/* Card Editor */}
             {isOpen && (
                 <div className="border-t border-white/10 p-6 bg-black/20">
-                    <form action={async (formData: FormData) => {
-                        if (compressedFile) {
-                            formData.set('imageFile', compressedFile);
-                        }
-                        await formAction(formData);
-                    }} className="space-y-6">
+                <form ref={formRef} onSubmit={e => { e.preventDefault(); handleSubmit(); }} className="space-y-6">
                         <input type="hidden" name="id" value={card.id} />
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -170,7 +177,8 @@ function BioCardEditor({ card }: { card: BioCard }) {
                             )}
                             <div className="ml-auto">
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={handleSubmit}
                                     disabled={isPending || isCompressing}
                                     className="flex items-center gap-2 px-5 py-2 bg-primary hover:bg-primary/80 text-white text-sm rounded-lg transition-colors disabled:opacity-50"
                                 >
