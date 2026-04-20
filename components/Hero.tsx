@@ -24,27 +24,47 @@ export default function Hero({ content }: HeroProps) {
 
     // Helper to safely parse user input (iframe, normal url, or intl url) to an embed url
     const getCleanSpotifyUrl = (input: string | undefined): string => {
-        if (!input) return "https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0";
+        const fallback = "https://open.spotify.com/embed/track/6AGC7ecYM61Mbpw3g9akOB?utm_source=generator&theme=0";
+        if (!input || typeof input !== 'string') return fallback;
         
-        // If user pasted an iframe
-        if (input.includes("<iframe") && input.includes("src=")) {
-            const match = input.match(/src="([^"]+)"/);
-            if (match && match[1]) return match[1];
+        let url = input.trim();
+
+        // If user pasted an iframe, extract the src
+        if (url.includes("<iframe") && url.includes("src=")) {
+            const match = url.match(/src=["'](.*?)["']/);
+            if (match && match[1]) {
+                url = match[1];
+            } else {
+                return fallback;
+            }
         }
         
-        // If user pasted a standard URL
-        let url = input.trim();
         // Remove intl-pt or similar locale strings from the URL paths
         url = url.replace(/open\.spotify\.com\/[a-z]{2}-[a-z]{2}\//, 'open.spotify.com/');
         
         // Convert to embed URL if it's not already
-        if (url.includes("open.spotify.com/track/")) {
+        if (url.includes("open.spotify.com/track/") && !url.includes("/embed/")) {
             url = url.replace("open.spotify.com/track/", "open.spotify.com/embed/track/");
-        } else if (url.includes("open.spotify.com/album/")) {
+        } else if (url.includes("open.spotify.com/album/") && !url.includes("/embed/")) {
             url = url.replace("open.spotify.com/album/", "open.spotify.com/embed/album/");
+        } else if (url.includes("open.spotify.com/playlist/") && !url.includes("/embed/")) {
+            url = url.replace("open.spotify.com/playlist/", "open.spotify.com/embed/playlist/");
         }
-        
-        return url;
+
+        // Clean potentially problematic hash fragments or autoplay query params
+        try {
+            const urlObj = new URL(url);
+            urlObj.hash = ''; // Remove anchor tags that cause jumping
+            urlObj.searchParams.delete('autoplay');
+            urlObj.searchParams.delete('go');
+            // Ensure theme is set
+            if (!urlObj.searchParams.has('theme')) {
+                urlObj.searchParams.set('theme', '0');
+            }
+            return urlObj.toString();
+        } catch {
+            return fallback;
+        }
     };
 
     const finalSpotifyUrl = getCleanSpotifyUrl(content.spotifyEmbedUrl);
