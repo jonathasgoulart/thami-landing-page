@@ -3,7 +3,7 @@ import { HeroForm } from '@/components/admin/HeroForm';
 import { StoryForm } from '@/components/admin/StoryForm';
 import { ThemeForm } from '@/components/admin/ThemeForm';
 import { ContactForm } from '@/components/admin/ContactForm';
-import { MessageSquare, Image, ArrowRight } from 'lucide-react';
+import { MessageSquare, Image, ArrowRight, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Dashboard() {
@@ -23,6 +23,15 @@ export default async function Dashboard() {
                     >
                         <Image size={16} className="text-primary" />
                         Gerenciar Galeria
+                        <ArrowRight size={14} className="opacity-50" />
+                    </Link>
+
+                    <Link
+                        href="/admin/dashboard/bio"
+                        className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded border border-white/10 transition-colors text-sm font-medium"
+                    >
+                        <User size={16} className="text-accent" />
+                        Sobre THAMI
                         <ArrowRight size={14} className="opacity-50" />
                     </Link>
 

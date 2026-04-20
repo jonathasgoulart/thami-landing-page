@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import { getSiteContent, getMessages } from "@/lib/db";
 import { Gallery } from "@/components/Gallery";
+import { BioSection } from "@/components/BioSection";
 import { Footer } from "@/components/Footer";
 import { MessageBoard } from "@/components/MessageBoard";
 
@@ -34,6 +35,9 @@ export default async function Home() {
 
       {/* Gallery Section - Carousel */}
       <Gallery images={content.gallery} />
+
+      {/* Bio Section - Horizontal Scroll Cards */}
+      <BioSection cards={content.bioCards || []} />
 
       {/* Contact & Message Board Section (Unified) */}
       <MessageBoard messages={messages} contact={content.contact} />

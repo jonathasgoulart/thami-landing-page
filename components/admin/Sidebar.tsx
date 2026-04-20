@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutDashboard, Image as ImageIcon, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Image as ImageIcon, Settings, LogOut, User } from 'lucide-react';
 
 export function Sidebar() {
     return (
@@ -23,6 +23,13 @@ export function Sidebar() {
                 >
                     <ImageIcon size={18} />
                     <span>Galeria</span>
+                </Link>
+                <Link
+                    href="/admin/dashboard/bio"
+                    className="flex items-center gap-3 px-4 py-3 text-foreground/80 hover:bg-white/5 rounded-md hover:text-primary transition-colors"
+                >
+                    <User size={18} />
+                    <span>Sobre THAMI</span>
                 </Link>
                 <Link
                     href="/admin/dashboard/settings"
