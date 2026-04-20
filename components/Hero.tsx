@@ -1,5 +1,8 @@
+'use client'
+
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
+import { fbEvents } from "@/components/FacebookPixel";
 
 interface HeroProps {
     content: {
@@ -47,6 +50,7 @@ export default function Hero({ content }: HeroProps) {
                     <Link
                         href={content.ctaLink || '#'}
                         target="_blank"
+                        onClick={() => fbEvents.ctaClick('Spotify CTA')}
                         className="group relative inline-flex items-center gap-2 md:gap-3 px-6 py-2 md:px-8 md:py-3 bg-primary text-white font-serif text-sm md:text-lg tracking-wider hover:bg-primary/90 transition-all duration-300 rounded-sm overflow-hidden shadow-lg shadow-primary/20"
                     >
                         <span className="relative z-10 whitespace-nowrap">{content.ctaText}</span>
@@ -58,6 +62,7 @@ export default function Hero({ content }: HeroProps) {
                         <Link
                             href={content.youtubeCtaLink}
                             target="_blank"
+                            onClick={() => fbEvents.ctaClick('YouTube CTA')}
                             className="group relative inline-flex items-center gap-2 md:gap-3 px-6 py-2 md:px-8 md:py-3 bg-red-600 text-white font-serif text-sm md:text-lg tracking-wider hover:bg-red-700 transition-all duration-300 rounded-sm overflow-hidden shadow-lg shadow-red-600/20"
                         >
                             <span className="relative z-10 whitespace-nowrap">{content.youtubeCtaText}</span>
