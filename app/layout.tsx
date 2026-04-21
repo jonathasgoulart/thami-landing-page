@@ -16,8 +16,22 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.thami.app"),
   title: "THAMI",
   description: "Experiência Vintage R&B - Ouça agora o novo single",
+  openGraph: {
+    title: "THAMI",
+    description: "Experiência Vintage R&B - Ouça agora o novo single",
+    url: "https://www.thami.app",
+    siteName: "THAMI",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "THAMI",
+    description: "Experiência Vintage R&B - Ouça agora o novo single",
+  },
 };
 
 import { Watermark } from "@/components/Watermark";
