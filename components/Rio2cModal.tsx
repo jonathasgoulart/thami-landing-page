@@ -81,7 +81,7 @@ export function Rio2cModal({ contact }: Rio2cModalProps) {
                     </h2>
 
                     {/* Subtitle (Serif Cormorant Font) */}
-                    <p className="text-foreground/50 text-xs leading-relaxed mb-6 font-serif max-w-xs px-2">
+                    <p className="text-foreground/55 text-sm leading-relaxed mb-6 font-serif max-w-xs px-2">
                         Preparamos esta curadoria de materiais e canais de escuta rápida exclusivamente para curadores, diretores e parceiros da indústria.
                     </p>
 
