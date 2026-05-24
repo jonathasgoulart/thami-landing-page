@@ -38,6 +38,13 @@ export function Sidebar() {
                     <Settings size={18} />
                     <span>Configurações</span>
                 </Link>
+                <Link
+                    href="/admin/dashboard/fanpage"
+                    className="flex items-center gap-3 px-4 py-3 text-foreground/80 hover:bg-white/5 rounded-md hover:text-primary transition-colors"
+                >
+                    <User size={18} />
+                    <span>Fanpage</span>
+                </Link>
             </nav>
 
             <div className="p-4 border-t border-white/5">

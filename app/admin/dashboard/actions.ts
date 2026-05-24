@@ -134,3 +134,31 @@ export async function updateContact(prevState: any, formData: FormData) {
         return { message: '❌ Erro ao salvar.' };
     }
 }
+
+export async function updateFanpage(prevState: any, formData: FormData) {
+    try {
+        const currentContent = await getSiteContent();
+        const session = (await cookies()).get('admin_session');
+        if (!session) return { message: '❌ Não autorizado.' };
+
+        const newFanpageData = {
+            name: formData.get('name') as string,
+            bio: formData.get('bio') as string,
+            spotifyUrl: formData.get('spotifyUrl') as string,
+            exclusiveText: formData.get('exclusiveText') as string,
+            exclusivePrice: formData.get('exclusivePrice') as string,
+        };
+
+        await updateSiteContent({
+            ...currentContent,
+            fanpage: newFanpageData,
+        });
+
+        revalidatePath('/fanpage');
+        revalidatePath('/admin/dashboard/fanpage');
+
+        return { message: '✅ Fanpage atualizada com sucesso!' };
+    } catch (error) {
+        return { message: '❌ Erro ao salvar fanpage.' };
+    }
+}

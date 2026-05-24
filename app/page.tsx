@@ -4,6 +4,8 @@ import { Gallery } from "@/components/Gallery";
 import { BioSection } from "@/components/BioSection";
 import { Footer } from "@/components/Footer";
 import { MessageBoard } from "@/components/MessageBoard";
+import { Navbar } from "@/components/Navbar";
+import { Rio2cModal } from "@/components/Rio2cModal";
 
 export const revalidate = 0; // Disable cache for Phase 1 (Local JSON) to see instant updates
 
@@ -12,7 +14,13 @@ export default async function Home() {
   const messages = await getMessages();
 
   return (
-    <main className="min-h-screen text-foreground selection:bg-primary selection:text-white relative z-10">
+    <main className="min-h-screen text-foreground selection:bg-primary selection:text-white relative z-10 pt-16 md:pt-0">
+      
+      {/* Sticky Navbar */}
+      <Navbar contact={content.contact} />
+
+      {/* Welcome popup for Rio2C */}
+      <Rio2cModal contact={content.contact} />
 
       {/* Hero Section (Connected to DB) */}
       <Hero content={content.hero} />

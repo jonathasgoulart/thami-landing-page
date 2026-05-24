@@ -8,8 +8,8 @@ import { Send, Heart, Mail, MessageCircle, CornerDownRight } from 'lucide-react'
 export function MessageBoard({ messages, contact }: { messages: any[], contact: any }) {
     const [state, formAction] = useActionState(submitMessage, { message: '' });
 
-    // Filter approved messages (Auto-approved now, but filter just in case logic changes)
-    const displayMessages = messages.filter(m => m.approved !== false);
+    // Filter approved messages (Moderated: strictly shows only manually approved messages)
+    const displayMessages = messages.filter(m => m.approved === true);
 
     return (
         <section className="py-16 container mx-auto px-4" id="contato">

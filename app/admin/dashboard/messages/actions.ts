@@ -16,7 +16,7 @@ export async function submitMessage(prevState: any, formData: FormData) {
             id: randomUUID(),
             name,
             text,
-            approved: true, // AUTO-APPROVED by default now
+            approved: false, // Moderated by default (requires approval)
             reply: null,    // Init reply as null
             created_at: new Date().toISOString(),
         };
