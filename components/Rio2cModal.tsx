@@ -63,26 +63,19 @@ export function Rio2cModal({ contact }: Rio2cModalProps) {
                         <X size={16} />
                     </button>
 
-                    {/* Rio2C Official Logo Image */}
-                    <img 
-                        src="/assets/rio2c-logo.png" 
-                        alt="Rio2C Logo" 
-                        className="h-8 w-auto object-contain select-none pointer-events-none mb-4 opacity-90"
-                    />
-
                     {/* Welcoming Tag */}
-                    <span className="text-[8px] tracking-[0.45em] uppercase text-foreground/40 font-medium mb-3 block">
-                        Pitching Show 2026
+                    <span className="text-[8px] tracking-[0.45em] uppercase text-primary font-semibold mb-3 block">
+                        Canais Oficiais
                     </span>
 
                     {/* Title (Serif Cormorant Font) */}
-                    <h2 className="text-3xl font-serif font-light text-foreground mb-3 tracking-wide leading-tight">
-                        Boas-vindas
+                    <h2 className="text-3xl font-serif font-light text-foreground mb-3 tracking-widest leading-tight uppercase">
+                        THAMI
                     </h2>
 
                     {/* Subtitle (Serif Cormorant Font) */}
-                    <p className="text-foreground/55 text-sm leading-relaxed mb-6 font-serif max-w-xs px-2">
-                        Preparamos esta curadoria de materiais e canais de escuta rápida exclusivamente para curadores, diretores e parceiros da indústria.
+                    <p className="text-foreground/55 text-sm leading-relaxed mb-6 font-serif max-w-xs px-4">
+                        Seja muito bem-vindo(a)! Criamos esta curadoria de acessos rápidos para você ouvir os últimos lançamentos, assistir ao clipe e se conectar comigo.
                     </p>
 
                     {/* Minimalist Monochrome Grid */}
