@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.thami.app"),
   title: "THAMI",
   description: "Experiência Vintage R&B - Ouça agora o novo single",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     title: "THAMI",
     description: "Experiência Vintage R&B - Ouça agora o novo single",

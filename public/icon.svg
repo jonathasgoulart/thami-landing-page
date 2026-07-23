@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1416" />
+      <stop offset="100%" stop-color="#18262a" />
+    </linearGradient>
+    <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f5e6ca" />
+      <stop offset="50%" stop-color="#d4c4a8" />
+      <stop offset="100%" stop-color="#b89e72" />
+    </linearGradient>
+    <linearGradient id="teal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64c49b" />
+      <stop offset="100%" stop-color="#4a9d7a" />
+    </linearGradient>
+  </defs>
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bg-grad)" stroke="url(#gold-grad)" stroke-width="14" />
+  
+  <!-- Inner Decorative Ring -->
+  <circle cx="256" cy="256" r="215" fill="none" stroke="url(#teal-grad)" stroke-width="5" stroke-dasharray="10 8" opacity="0.6" />
+  
+  <!-- Monogram T -->
+  <g fill="url(#gold-grad)">
+    <path d="M 140 160 C 140 145 155 135 180 135 L 332 135 C 357 135 372 145 372 160 L 372 185 L 340 185 L 340 175 L 280 175 L 280 338 C 280 365 295 372 315 372 L 315 385 L 197 385 L 197 372 C 217 372 232 365 232 338 L 232 175 L 172 175 L 172 185 L 140 185 Z" />
+  </g>
+
+  <!-- Musical Note Accent -->
+  <circle cx="340" cy="160" r="16" fill="url(#teal-grad)" />
+  <path d="M 340 160 L 340 130 C 340 120 355 115 365 120" stroke="url(#teal-grad)" stroke-width="6" fill="none" stroke-linecap="round" />
+</svg>
