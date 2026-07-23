@@ -19,20 +19,29 @@ export async function uploadPhoto(prevState: any, formData: FormData) {
             return { message: '❌ Nenhum arquivo enviado.' };
         }
 
-        // Upload to Supabase Storage
-        const ext = path.extname(file.name);
-        const fileName = `${randomUUID()}${ext}`;
+        // Upload to Supabase Storage with Base64 fallback
+        let publicUrl = '';
         const buffer = await file.arrayBuffer();
+        try {
+            const ext = path.extname(file.name);
+            const fileName = `${randomUUID()}${ext}`;
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('uploads')
-            .upload(fileName, buffer, { contentType: file.type });
+            const { error: uploadError } = await supabase.storage
+                .from('uploads')
+                .upload(fileName, buffer, { contentType: file.type });
 
-        if (uploadError) throw uploadError;
-
-        // Get Public URL
-        const { data: publicDesc } = supabase.storage.from('uploads').getPublicUrl(fileName);
-        const publicUrl = publicDesc.publicUrl;
+            if (!uploadError) {
+                const { data: publicDesc } = supabase.storage.from('uploads').getPublicUrl(fileName);
+                publicUrl = publicDesc.publicUrl;
+            } else {
+                throw uploadError;
+            }
+        } catch (storageErr) {
+            console.warn('Storage upload error, using base64 fallback:', storageErr);
+            const base64 = Buffer.from(buffer).toString('base64');
+            const mimeType = file.type || 'image/jpeg';
+            publicUrl = `data:${mimeType};base64,${base64}`;
+        }
 
         // Update DB
         const content = await getSiteContent();

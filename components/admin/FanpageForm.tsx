@@ -41,28 +41,6 @@ export function FanpageForm({ content }: { content: any }) {
                         className="w-full bg-background border border-white/10 rounded-md p-2 text-foreground"
                     />
                 </div>
-
-                <div className="pt-4 border-t border-white/5">
-                    <h4 className="font-semibold mb-4">Post Exclusivo (Pré-lançamento)</h4>
-                </div>
-
-                <div>
-                    <label className="block text-sm mb-1 text-foreground/80">Texto da Postagem Exclusiva</label>
-                    <textarea
-                        name="exclusiveText"
-                        defaultValue={fanpage.exclusiveText || "Música nova saindo do forno! 🎧 Quem quiser ouvir a guia acústica de \"Fiquei Assim\" antes do lançamento oficial, é só desbloquear abaixo 👇"}
-                        className="w-full bg-background border border-white/10 rounded-md p-2 text-foreground h-20"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm mb-1 text-foreground/80">Preço (Ex: R$ 15,00)</label>
-                    <input
-                        type="text"
-                        name="exclusivePrice"
-                        defaultValue={fanpage.exclusivePrice || "R$ 15,00"}
-                        className="w-full bg-background border border-white/10 rounded-md p-2 text-foreground"
-                    />
-                </div>
             </div>
 
             {state?.message && (

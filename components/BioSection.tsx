@@ -25,7 +25,6 @@ export function BioSection({ cards }: { cards: BioCard[] }) {
             {/* Section Header */}
             <div className="container mx-auto px-4 mb-8 flex justify-between items-end">
                 <div>
-                    <span className="text-[10px] text-primary tracking-[0.3em] uppercase font-medium opacity-70">Mídia Kit</span>
                     <h2 className="text-2xl md:text-3xl font-serif text-foreground tracking-wide mt-1">
                         Sobre THAMI
                     </h2>

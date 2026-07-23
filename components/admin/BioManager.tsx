@@ -100,11 +100,9 @@ function BioCardEditor({ card }: { card: BioCard }) {
                                             <img src={preview} alt="preview" className="w-full h-full object-cover" />
                                             <label
                                                 htmlFor={`file-${card.id}`}
-                                                className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                                                className="absolute bottom-2 right-2 flex items-center justify-center bg-black/70 border border-white/20 rounded-md px-3 py-1.5 cursor-pointer text-white text-xs gap-2 hover:bg-black/90 transition-colors shadow-lg"
                                             >
-                                                <span className="text-white text-xs flex items-center gap-2">
-                                                    <Upload size={14} /> Trocar foto
-                                                </span>
+                                                <Upload size={14} /> Trocar foto
                                             </label>
                                         </>
                                     ) : (

@@ -130,9 +130,8 @@ export function Rio2cModal({ contact }: Rio2cModalProps) {
                             >
                                 <span className="flex items-center gap-3 font-medium text-xs tracking-wider uppercase">
                                     <MessageCircle size={16} className="text-white/40 group-hover:text-[#25D366] transition-colors" />
-                                    Contato Comercial
+                                    Falar com a produção
                                 </span>
-                                <span className="text-[9px] opacity-40 uppercase tracking-widest font-sans">WhatsApp</span>
                             </Link>
                         )}
                     </div>

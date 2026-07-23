@@ -71,7 +71,7 @@ export function MessageBoard({ messages, contact }: { messages: any[], contact: 
                                     className="flex-1 inline-flex justify-center items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg shadow-green-900/20"
                                 >
                                     <MessageCircle size={20} />
-                                    WhatsApp
+                                    Falar com a produção
                                 </a>
                             )}
 
@@ -81,7 +81,7 @@ export function MessageBoard({ messages, contact }: { messages: any[], contact: 
                                     className="flex-1 inline-flex justify-center items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors border border-white/10"
                                 >
                                     <Mail size={20} />
-                                    Email
+                                    Falar com a produção
                                 </a>
                             )}
                         </div>
